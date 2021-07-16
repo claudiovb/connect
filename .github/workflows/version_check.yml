@@ -1,0 +1,18 @@
+on:
+  pull_request:
+    branches:
+      - v8
+
+name: Check connect version
+jobs:
+  checkVersion:
+    name: Check connect version
+    runs-on: ubuntu-latest
+    container: registry.gitlab.com/satoshilabs/trezor/trezor-suite/base@sha256:cfc62bc28946f0789a10dde4ecd3990ee7502e92de3dc2fa4d4ca84a329f7d21
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          LAST_COMMIT=$(git log -1 --pretty=%B)
+          VERSION=$(jq -r .version package.json)
+          [[ "$LAST_COMMIT" == "version $VERSION" ]]
+
