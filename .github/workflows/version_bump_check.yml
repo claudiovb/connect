@@ -1,0 +1,17 @@
+on:
+  pull_request:
+    branches:
+      - v8
+name: Check connect version bump
+jobs:
+  checkVersion:
+    name: Check connect version bump
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - run: |
+          npm install
+          REMOTE_VERSION=$(npm show trezor-connect version)
+          LOCAL_VERSION=$(jq -r .version package.json)
+          node scripts/ci-compare-version.js $LOCAL_VERSION $REMOTE_VERSION
